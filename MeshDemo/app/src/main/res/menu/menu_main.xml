@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".ActivityMain">
+    <item
+        android:id="@+id/menu_main_addDevice"
+        android:orderInCategory="0"
+        android:title="Add Device"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_add_white_24dp"/>
+</menu>

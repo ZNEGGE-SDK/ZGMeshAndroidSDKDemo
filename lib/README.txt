@@ -1,0 +1,1 @@
+copy "jniLibs" to xx\app\src\main
