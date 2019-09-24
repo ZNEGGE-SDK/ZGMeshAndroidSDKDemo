@@ -1,10 +1,11 @@
 package com.example.meshdemo.activity;
 
-import androidx.appcompat.widget.Toolbar;
-
 import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.widget.TextView;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.example.meshdemo.AppSetting;
 import com.example.meshdemo.R;
@@ -13,8 +14,8 @@ import com.example.meshdemo.dao.MeshDatabase;
 import com.example.meshdemo.dao.MeshDeviceDao;
 import com.example.meshdemo.module.MeshDevice;
 import com.example.meshdemo.module.MeshPlace;
-import com.telink.bluetooth.AutoPairTask;
 import com.telink.Interface.OnAutoPairLightRequestListener;
+import com.telink.bluetooth.AutoPairTask;
 import com.telink.bluetooth.module.DeviceInfo;
 import com.telink.bluetooth.module.LeAutoPairParameters;
 
@@ -130,5 +131,15 @@ public class PairDeviceActivity extends BaseActivity implements OnAutoPairLightR
         showToast("Error");
         stopPair();
         finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            stopPair();
+            finish();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }
