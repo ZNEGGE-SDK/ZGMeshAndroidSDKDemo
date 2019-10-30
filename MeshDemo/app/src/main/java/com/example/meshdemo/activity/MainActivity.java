@@ -2,9 +2,13 @@ package com.example.meshdemo.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -106,7 +110,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                 return;
             }
         }
-        autoConnect();
+        checkLocationSetting();
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -114,7 +118,7 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == 123) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                autoConnect();
+                checkLocationSetting();
             } else {
                 showConfirmDialog("", "Request location permission", confirm -> {
                     if (confirm) {
@@ -131,6 +135,38 @@ public class MainActivity extends BaseActivity implements BottomNavigationView.O
                     }
                 });
             }
+        }
+    }
+
+    private boolean checkLocationState() {
+        if (Build.VERSION.SDK_INT < 23) {
+            return true;
+        }
+        LocationManager lm = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        return lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER) || lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+    }
+
+    private void checkLocationSetting() {
+        if (checkLocationState()) {
+            autoConnect();
+        } else {
+            new AlertDialog.Builder(this)
+                    .setTitle("")
+                    .setMessage("Location is not enable!")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                            startActivityForResult(intent, 11);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            autoConnect();
+                        }
+                    }).show();
         }
     }
 
